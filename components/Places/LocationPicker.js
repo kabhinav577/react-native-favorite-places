@@ -1,5 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, StyleSheet, Alert, Text, Image } from 'react-native';
+import {
+  useNavigation,
+  useRoute,
+  useIsFocused,
+} from '@react-navigation/native';
 import {
   getCurrentPositionAsync,
   useForegroundPermissions,
@@ -10,10 +15,30 @@ import { Colors } from '../../constants/colors';
 import OutlinedButton from '../UI/OutlinedButton';
 import { getMapPreview } from '../../utils/location';
 
-const LocationPicker = () => {
+const LocationPicker = ({ onPickLocation }) => {
+  const route = useRoute();
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [pickedLocation, setPickedLocation] = useState(null);
   const [locationPermissionsInformation, requestPermission] =
     useForegroundPermissions();
+
+  useEffect(() => {
+    if (isFocused && route.params) {
+      const mapPickedLocation = route.params && {
+        lat: route.params.pickedLat,
+        lng: route.params.pickedLng,
+      };
+
+      setPickedLocation(mapPickedLocation);
+    }
+  }, [isFocused, route]);
+
+  useEffect(() => {
+    if (pickedLocation) {
+      onPickLocation(pickedLocation);
+    }
+  }, [pickedLocation, onPickLocation]);
 
   const verifyPermissions = async () => {
     if (
@@ -49,7 +74,9 @@ const LocationPicker = () => {
     });
   };
 
-  const pickOnMapHandler = () => {};
+  const pickOnMapHandler = () => {
+    navigation.navigate('Map');
+  };
 
   let locationPreview = <Text>No location chosen yet.</Text>;
 

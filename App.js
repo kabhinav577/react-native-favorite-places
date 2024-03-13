@@ -4,12 +4,12 @@ import * as SplashScreen from 'expo-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import Map from './screens/Map';
 import AllPlaces from './screens/AllPlaces';
 import AddPlace from './screens/AddPlace';
-import Map from './screens/Map';
 import IconButton from './components/UI/IconButton';
-import { Colors } from './constants/colors';
 import { init } from './utils/database';
+import { Colors } from './constants/colors';
 
 const Stack = createNativeStackNavigator();
 
